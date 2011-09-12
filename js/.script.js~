@@ -1,0 +1,250 @@
+function DV()
+{
+	this.date = new Date();
+}
+
+var dv = new DV();
+
+function dvinit()
+{
+	//$("#tabs").tabs();
+	//{ event: "mouseover" } ).find( ".ui-tabs-nav" ).sortable({ axis: "x" });
+
+	dv.init();
+	dv.data_into_chart();
+	dv.db();
+}
+
+DV.prototype.init = function()
+{
+	var self = this;
+	$.get( "js/rows.txt.js",
+		function( data, status, xhr )
+		{
+			log( data, status, xhr, self );
+		}
+	);
+}
+/*
+	$.getJSON( "json/museum.json",
+		function( data, status, xhr ){
+			self.load( self, data, status, xhr )
+		}
+	);
+*/
+
+DV.prototype.db = function()
+{
+	var db;
+	try {
+		if (window.openDatabase)
+		{
+			db = openDatabase("flights", "1.0", "flights database", 1000 * 1000 );
+			if (!db)
+			{
+				log("ERROR 1");
+			}
+			else
+			{
+				db.transaction(function (tx)
+				{
+					tx.executeSql('CREATE TABLE IF NOT EXISTS LOGS (id unique, log)');
+					tx.executeSql('INSERT INTO LOGS (id, log) VALUES (3, "foobar")');
+					tx.executeSql('INSERT INTO LOGS (id, log) VALUES (4, "logmsg")');
+				});
+				db.transaction( function( tx )
+				{
+					tx.executeSql('CREATE TABLE IF NOT EXISTS f (id unique)');
+					tx.executeSql('INSERT INTO f (id) VALUES ( '+(new Date()-0)+' )');
+					tx.executeSql('SELECT asdf from f;',[],
+						function( tx, resok ){
+							var data = new google.visualization.DataTable();
+							data.addColumn('string', 'id');
+
+							var len = resok.rows.length;
+							for( var i = 0 ; i < len ; i ++ )
+								data.addRow( [ new Date( resok.rows.item( i ).id ).toString() ] );
+
+							var table = new google.visualization.Table( $('#table')[0] );
+							table.draw( data, {} );
+						},
+						function( tx, resfail ){
+							log( resfail );
+							$("#table").html( resfail.message );
+						});
+				});
+			}
+		}
+		else
+		{
+			alert("ERROR 2");
+		}
+	}
+	catch( err )
+	{
+		log( err );
+		alert("ERROR 3");
+	}
+}
+
+DV.prototype.load = function ( self, data, status, xhr )
+{
+	log( self, data, status, xhr );
+	this.model = data;
+	this.data_into_chart()
+}
+
+DV.prototype.data_into_chart = function ( )
+{
+/*
+	var d = new google.visualization.DataTable();
+	d.addColumn( "datetime", "datetime" );
+	d.addColumn( "number", "people" );
+	//d.addColumn( "string", "country" );
+	d.addRows( this.model.data.length );
+	for( var a in data )
+	{
+		var i = new Number( a );
+		d.setValue( 0, 0, this.model.data[ a ].datetime );
+		d.setValue( 0, 1, this.model.data[ a ].people );
+		//d.setValue( 0, 2, data[ a ].country );
+	}
+	var chart = new google.visualization.LineChart( $('#chart1')[0] );
+	chart.draw( d, {width: 800, height: 400, title: 'Example' });
+*/
+
+	var data = new google.visualization.DataTable();
+	data.addColumn('string', 'Country');
+	data.addColumn('number', 'Total visits (m/year)');
+	data.addRows( [
+		['France',210],
+		['Mexico',220],
+		['Germany',250],
+		['Argentina',310],
+		['India',310],
+		['Australia',330],
+		['Finland',340],
+		['Norway',380],
+		['Italy',400],
+		['Brazil',420],
+		['Canada',500],
+		['United Kingdom',550],
+		['Russia',560],
+		['Spain',710],
+		['China',800],
+		['United States',840]
+	]);
+
+	var table = new google.visualization.Table( $('#chart1')[0] );
+	table.draw(data, {});
+
+	var geomap = new google.visualization.GeoMap( $('#chart2')[0] );
+	geomap.draw(data, {width: 600, height: 300, 'dataMode': 'regions',
+		colors: [0x88ff88, 0x008800] } );
+
+	var bar = new google.visualization.BarChart( $('#chart3')[0] );
+	bar.draw(data, {width: 500, height: 400 } );
+
+	var pie = new google.visualization.PieChart( $('#chart4')[0] );
+	pie.draw(data, {width: 400, height: 400 } );
+
+
+	var data2 = new google.visualization.DataTable();
+	data2.addColumn('string', '', 'Country');
+	data2.addColumn('number', 'Visits1','a');
+	data2.addColumn('number', 'Visits2','b');
+	data2.addRows( [
+		['Europe',       1000,12],
+		['Asia',         1000,10],
+		['North America',1000,12],
+		['South America',1000,10],
+		['Oceania',      1000,14],
+		['Europe',       1200,10],
+		['Asia',         1200,11],
+		['North America',1200,10],
+		['South America',1200,13],
+		['Oceania',      1200,10]
+	]);
+
+	var table2 = new google.visualization.Table( $('#chart5')[0] );
+	table2.draw(data2, {});
+
+	var mc = new google.visualization.MotionChart( $('#chart6')[0] );
+	mc.draw(data2, {width: 600, height: 300 } );
+	
+	var data3 = new google.visualization.DataTable();
+	data3.addColumn( "string", "Continent" );
+	for( var i = 10 ; i <= 19 ; i ++ )
+		data3.addColumn( "number", i );
+	data3.addRows([
+		['Asia',6.0900877456,27.2938796871,45,27.2938796871,6.0900877456,0.4999048442,0.0150958183,0.0001676994,6.85349088512068E-007,0.000000001],
+		['Europe',24.2612263885,5.4134113295,0.4443598615,0.0134185051,0.0001490661,6.09199189788505E-007,9.15893938258221E-010,5.06566621963767E-013,1.03070284366199E-016,7.71499939185567E-021],
+		['North America',0.0001676994,0.0150958183,0.4999048442,6.0900877456,27.2938796871,45,27.2938796871,6.0900877456,0.4999048442,0.0150958183],
+		['South America',1.14486742282278E-010,7.61498987235631E-008,1.86332658603934E-005,0.0016773131,0.0555449827,0.6766764162,3.0326532986,5,3.0326532986,0.6766764162],
+		['Oceania',2.4022122088,2.8378784067,3,2.8378784067,2.4022122088,1.8195919791,1.2333368715,0.7480566263,0.4060058497,0.1971855858],
+		['Africa',1.6014748058,1.8919189378,2,1.8919189378,1.6014748058,1.2130613194,0.822224581,0.4987044176,0.2706705665,0.1314570572]
+//		['Visitas',34.3551688482,37.4521842555,50.944283339,38.1288605955,37.4433484961,49.2092351682,32.3971902573,12.3370164889,4.2092352443,1.0204148786]
+	]);
+
+	var bc3 = new google.visualization.BarChart( $( "#chart7" )[0] );
+	bc3.draw( data3, {width: 600, height: 300 } );
+
+	var data4 = new google.visualization.DataTable();
+	data4.addColumn( "string", "hora" );
+	data4.addColumn( "number", "Asia" );
+	data4.addColumn( "number", "Europe" );
+	data4.addColumn( "number", "North America" );
+	data4.addColumn( "number", "South America" );
+	data4.addColumn( "number", "Oceania" );
+	data4.addColumn( "number", "Africa" );
+	data4.addRows([
+		["10",6.0900877456,24.2612263885,0.0001676994,1.14486742282278E-010,2.4022122088,1.6014748058],
+		["11",27.2938796871,5.4134113295,0.0150958183,7.61498987235631E-008,2.8378784067,1.8919189378],
+		["12",45,0.4443598615,0.4999048442,1.86332658603934E-005,3,2],
+		["13",27.2938796871,0.0134185051,6.0900877456,0.0016773131,2.8378784067,1.8919189378],
+		["14",6.0900877456,0.0001490661,27.2938796871,0.0555449827,2.4022122088,1.6014748058],
+		["15",0.4999048442,6.09199189788505E-007,45,0.6766764162,1.8195919791,1.2130613194],
+		["16",0.0150958183,9.15893938258221E-010,27.2938796871,3.0326532986,1.2333368715,0.822224581],
+		["17",0.0001676994,5.06566621963767E-013,6.0900877456,5,0.7480566263,0.4987044176],
+		["18",6.85349088512068E-007,1.03070284366199E-016,0.4999048442,3.0326532986,0.4060058497,0.2706705665],
+		["19",0.000000001,7.71499939185567E-021,0.0150958183,0.6766764162,0.1971855858,0.1314570572]
+	]);
+
+	var cc4 = new google.visualization.ColumnChart( $( "#chart8" )[0] );
+	cc4.draw( data4, {width: 600, height: 400, isStacked : true } );
+
+	var data5 = new google.visualization.DataTable();
+	data5.addColumn( "string", "hora" );
+	data5.addColumn( "number", "Total" );
+	data5.addRows([
+		["10",34.3551688482],
+		["11",37.4521842555],
+		["12",50.944283339],
+		["13",38.1288605955],
+		["14",37.4433484961],
+		["15",49.2092351682],
+		["16",32.3971902573],
+		["17",12.3370164889],
+		["18",4.2092352443],
+		["19",1.0204148786]
+	]);
+
+	var cc5 = new google.visualization.ColumnChart( $( "#chart9" )[0] );
+	cc5.draw( data5, {width: 600, height: 400 } );
+
+	var data6 = new google.visualization.DataTable();
+	data6.addColumn( "string", "continent" );
+	data6.addColumn( "number", "total" );
+	data6.addRows([
+		["Asia", 112.2831039137 ],
+		["Europe", 30.1325657609 ],
+		["North America", 112.7981038898 ],
+		["South America", 12.4759004349 ],
+		["Oceania", 17.8843581435 ],
+		["Africa", 11.922905429 ]
+	]);
+
+	var cc6 = new google.visualization.ColumnChart( $( "#chart10" )[0] );
+	cc6.draw( data6, {width: 600, height: 400 } );
+
+}

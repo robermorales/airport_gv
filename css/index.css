@@ -1,0 +1,137 @@
+div#result, img.icon
+{
+	border: 1px solid gray;
+	margin: 3px;
+}
+
+img.icon
+{
+	width: 100px;
+	height: 60px;
+	padding: 3px;
+	display: block;
+}
+
+img.icon, input[type=radio]
+{
+	cursor: pointer;
+}
+
+td.setup
+{
+	text-align: center;
+}
+
+div#footer
+{
+	font-size: 10px;
+}
+
+div#result
+{
+	padding: 0;
+	width: 500px;
+	height: 300px;
+}
+
+img.fun , td.opts
+{
+	width:  15px;
+	height: 15px;
+	overflow: hidden;
+}
+
+td.opts > input
+{
+	width: 100%;
+	height: 100%;
+}
+
+td.opts.asis > input
+{
+	background: red;
+}
+
+span.asis
+{
+	font-weight: bold;
+}
+
+span.fun
+{
+	font: xx-small;
+}
+
+div#dbloading > button
+{
+	display: block;
+	width: 100px;
+	margin: 10px;
+}
+
+td.b
+{
+	padding: 5px;
+	margin: 5px;
+	border: 1px solid #aaaaaa;
+}
+
+div.total
+{
+	font-size: 35px;
+	text-align: center;
+	line-height: 100%;
+	background: white;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+}
+
+/*
+
+body
+{
+	font-size: 12px;
+	display: none;
+}
+
+*{
+	margin: 0;
+	padding: 0;
+	left: 0;
+	top: 0;
+}
+
+h1
+{
+	font-size: 200%;
+	margin: 10px;
+}
+
+select.sel{
+	width: 70px;
+}
+
+input.in{
+	width: 20px;
+}
+
+span.label{
+	width: 70px;
+	display: inline-block;
+}
+
+
+div#dbopts
+{
+	text-align: right;
+}
+
+div#dbopts td
+{
+	width: 35px;
+}
+
+*/

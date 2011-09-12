@@ -1,0 +1,38 @@
+body
+{
+	font-size: 12px;
+	display: none;
+	text-align: center;
+}
+
+*{
+	margin: 0;
+	padding: 0;
+	left: 0;
+	top: 0;
+}
+
+select.sel{
+	width: 70px;
+}
+
+input.in{
+	width: 20px;
+}
+
+span.label{
+	width: 70px;
+	display: inline-block;
+}
+
+img.icon{
+	width: 100px;
+	height: 100px;
+	border: 1px solid gray;
+	margin: 3px;
+	padding: 3px;
+}
+
+div.chart{
+	width: 400px;
+}

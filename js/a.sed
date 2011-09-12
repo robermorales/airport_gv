@@ -1,0 +1,4 @@
+s/\ /,new Date(2011,3,4,/g
+s/$/,Math.ceil(Math.random()*60))-0\],/g
+s/^/\[new Date()-0,/g
+
